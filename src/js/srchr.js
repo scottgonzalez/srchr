@@ -24,8 +24,8 @@ var srchr = window.srchr = {
 	document: $( document ),
 	
 	addService: function( name, query, items, template ) {
-		var key = name.replace( /[^a-zA-Z]+/g, "-" );
-		srchr.services[ key ] = {
+		var id = name.toLowerCase().replace( /[^a-z]+/g, "-" );
+		srchr.services[ id ] = {
 			query: query,
 			handleResult: function( data ) {
 				// force results to be an array
@@ -35,6 +35,7 @@ var srchr = window.srchr = {
 				$.each( results, function( i, item ) {
 					var html = util.parse( template, item );
 					srchr.document.trigger( "srchr-result", {
+						serviceId: id,
 						service: name,
 						html: html
 					});
@@ -44,13 +45,13 @@ var srchr = window.srchr = {
 		
 		srchr.document.trigger( "srchr-addservice", {
 			name: name,
-			key: key
+			id: id
 		});
 		
-		return key;
+		return id;
 	},
 	
-	search: function( service, term ) {
+	search: function( term, service ) {
 		var service = srchr.services[ service ];
 		$.getJSON( YQL.url, YQL.params( service, term ), service.handleResult );
 	}
