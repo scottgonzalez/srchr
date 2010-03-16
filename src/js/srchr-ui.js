@@ -1,6 +1,7 @@
 (function( $) {
 
-var services = $( "#services" ),
+var search = $( "#search" ),
+	services = $( "#services" ),
 	results = $( "#search_results" )
 		.wrap( "<div></div>")
 		.parent()
@@ -30,5 +31,13 @@ $( document )
 	.bind( "srchr-result", function( event, data ) {
 		resultsPanel[ data.serviceId ].append( data.html );
 	});
+
+$( "#search_submit" ).click(function() {
+	var term = search.val();
+	services.find( ":checked" ).each(function() {
+		srchr.search( term, this.name );
+	});
+	return false;
+});
 
 })( jQuery );
