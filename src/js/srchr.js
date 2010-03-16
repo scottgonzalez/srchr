@@ -21,9 +21,11 @@ var YQL = {
 var srchr = window.srchr = {
 	terms: {},
 	services: {},
+	document: $( document ),
 	
 	addService: function( name, query, items, template ) {
-		srchr.services[ name ] = {
+		var key = name.replace( /[^a-zA-Z]+/g, "-" );
+		srchr.services[ key ] = {
 			query: query,
 			handleResult: function( data ) {
 				// force results to be an array
@@ -32,10 +34,20 @@ var srchr = window.srchr = {
 				
 				$.each( results, function( i, item ) {
 					var html = util.parse( template, item );
-					$( html ).appendTo( "body" );
+					srchr.document.trigger( "srchr-result", {
+						service: name,
+						html: html
+					});
 				});
 			}
 		};
+		
+		srchr.document.trigger( "srchr-addservice", {
+			name: name,
+			key: key
+		});
+		
+		return key;
 	},
 	
 	search: function( service, term ) {
@@ -43,23 +55,5 @@ var srchr = window.srchr = {
 		$.getJSON( YQL.url, YQL.params( service, term ), service.handleResult );
 	}
 };
-
-srchr.addService( "Flickr",
-	"SELECT * FROM flickr.photos.search WHERE text = '{term}'",
-	"photo",
-	"<img src='http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_t.jpg'>"
-);
-
-srchr.addService( "Yahoo! Images",
-	"SELECT * FROM search.images WHERE query = '{term}'",
-	"result",
-	"<img src='{thumbnail_url}'>"
-);
-
-srchr.addService( "Upcoming",
-	"SELECT * FROM upcoming.events WHERE description LIKE '%{term}%' OR name LIKE '%{term}%'",
-	"event",
-	"<p>{name}</p>"
-);
 
 })( jQuery );
