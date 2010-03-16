@@ -54,4 +54,16 @@ srchr.addService( "flickr",
 	"<img src='http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_t.jpg'>"
 );
 
+srchr.addService( "yahoo",
+	"SELECT * FROM search.images WHERE query = '{term}'",
+	"query.results.result",
+	"<img src='{thumbnail_url}'>"
+);
+
+srchr.addService( "upcoming",
+	"SELECT * FROM upcoming.events WHERE description LIKE '%{term}%' OR name LIKE '%{term}%'",
+	"query.results.event",
+	"<p>{name}</p>"
+);
+
 })( jQuery );
