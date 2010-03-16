@@ -23,15 +23,19 @@ var srchr = window.srchr = {
 	services: {},
 	document: $( document ),
 	
-	addService: function( name, query, items, template ) {
+	addService: function( name, query, template ) {
 		var id = name.toLowerCase().replace( /[^a-z]+/g, "-" );
 		srchr.services[ id ] = {
 			query: query,
 			handleResult: function( data ) {
 				// force results to be an array
-				var results = data.query.results[ items ];
-				results = $.isArray( results ) ? results : [ results ];
+				var results = data.query.results;
+				if ( !results ) {
+					return;
+				}
 				
+				for (var prop in results) {}
+				results = $.isArray( results[ prop ] ) ? results[ prop ] : [ results ];
 				$.each( results, function( i, item ) {
 					var html = util.parse( template, item );
 					srchr.document.trigger( "srchr-result", {
