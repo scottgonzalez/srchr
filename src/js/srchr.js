@@ -5,14 +5,6 @@ var util = {
 		return str.replace( /{([^}]+)}/g, function( match, name ) {
 			return name in data ? data[ name ] : "";
 		});
-	},
-	
-	peek: function( obj, path ) {
-		path = path.split( "." );
-		while ( path.length ) {
-			obj = obj[ path.shift() ];
-		}
-		return obj;
 	}
 };
 
@@ -34,7 +26,11 @@ var srchr = window.srchr = {
 		srchr.services[ name ] = {
 			query: query,
 			handleResult: function( data ) {
-				$.each( util.peek( data, items), function( i, item ) {
+				// force results to be an array
+				var results = data.query.results[ items ];
+				results = $.isArray( results ) ? results : [ results ];
+				
+				$.each( results, function( i, item ) {
 					var html = util.parse( template, item );
 					$( html ).appendTo( "body" );
 				});
@@ -48,21 +44,21 @@ var srchr = window.srchr = {
 	}
 };
 
-srchr.addService( "flickr",
+srchr.addService( "Flickr",
 	"SELECT * FROM flickr.photos.search WHERE text = '{term}'",
-	"query.results.photo",
+	"photo",
 	"<img src='http://farm{farm}.static.flickr.com/{server}/{id}_{secret}_t.jpg'>"
 );
 
-srchr.addService( "yahoo",
+srchr.addService( "Yahoo! Images",
 	"SELECT * FROM search.images WHERE query = '{term}'",
-	"query.results.result",
+	"result",
 	"<img src='{thumbnail_url}'>"
 );
 
-srchr.addService( "upcoming",
+srchr.addService( "Upcoming",
 	"SELECT * FROM upcoming.events WHERE description LIKE '%{term}%' OR name LIKE '%{term}%'",
-	"query.results.event",
+	"event",
 	"<p>{name}</p>"
 );
 
