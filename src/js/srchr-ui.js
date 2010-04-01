@@ -1,7 +1,9 @@
 (function( $) {
 
 var search = $( "#search" ),
-	services = $( "#services" ),
+	services = $( "#services" ).children(),
+	searchTerms = $( "#search_terms" )
+		.addClass( "ui-widget ui-widget-content ui-corner-all" ),
 	results = $( "#search_results" )
 		.wrap( "<div></div>")
 		.parent()
@@ -13,7 +15,11 @@ $( document )
 		var service = $( "<li></li>" ),
 			
 			checkbox = $( "<input type='checkbox'>" )
-				.attr( "name", data.id )
+				.attr({
+					id: data.id,
+					name: data.id,
+					checked: true
+				})
 				.appendTo( service ),
 			
 			label = $( "<label>" )
@@ -21,6 +27,7 @@ $( document )
 				.text( data.name )
 				.appendTo( service );
 		
+		checkbox.button();
 		services.append( service );
 	})
 	.bind( "srchr-addservice", function( event, data ) {
@@ -29,15 +36,35 @@ $( document )
 		resultsPanel[ data.id ] = $( id );
 	})
 	.bind( "srchr-result", function( event, data ) {
-		resultsPanel[ data.serviceId ].append( data.html );
+		var result = $( "<div></div>" )
+			.addClass( "result ui-widget-content ui-corner-all" )
+			.html( data.html )
+			.appendTo( resultsPanel[ data.serviceId ] );
+		
+		$( "<span></span>" )
+			.addClass( "result-term ui-widget-header ui-corner-all" )
+			.text( data.term )
+			.appendTo( result );
 	});
 
-$( "#search_submit" ).click(function() {
-	var term = search.val();
-	services.find( ":checked" ).each(function() {
-		srchr.search( term, this.name );
+var randomClasses = "ui-state-default ui-state-active ui-state-hover".split( " " );
+$( "#search_submit" )
+	.button()
+	.click(function() {
+		var term = search.val();
+		services.find( ":checked" ).each(function() {
+			srchr.search( term, this.name );
+		});
+		
+		// TODO: list services
+		// TODO: make removable
+		var randomClass = randomClasses[ Math.floor( Math.random() * 3 ) ];
+		$( "<li></li>" )
+			.addClass( "ui-corner-all " + randomClass )
+			.text( term )
+			.appendTo( searchTerms );
+		
+		return false;
 	});
-	return false;
-});
 
 })( jQuery );

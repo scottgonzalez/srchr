@@ -27,7 +27,7 @@ var srchr = window.srchr = {
 		var id = name.toLowerCase().replace( /[^a-z]+/g, "-" );
 		srchr.services[ id ] = {
 			query: query,
-			handleResult: function( data ) {
+			handleResult: function( term, data ) {
 				// force results to be an array
 				var results = data.query.results;
 				if ( !results ) {
@@ -41,6 +41,7 @@ var srchr = window.srchr = {
 					srchr.document.trigger( "srchr-result", {
 						serviceId: id,
 						service: name,
+						term: term,
 						html: html
 					});
 				});
@@ -57,7 +58,9 @@ var srchr = window.srchr = {
 	
 	search: function( term, service ) {
 		var service = srchr.services[ service ];
-		$.getJSON( YQL.url, YQL.params( service, term ), service.handleResult );
+		$.getJSON( YQL.url, YQL.params( service, term ), function( data ) {
+			service.handleResult( term, data );
+		});
 	}
 };
 

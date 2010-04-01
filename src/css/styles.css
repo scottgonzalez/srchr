@@ -1,0 +1,72 @@
+body {
+	background-color: #000;
+	color: #fff;
+	font-family: monospace;
+	margin: 0;
+	padding: 1em;
+}
+
+header {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	display: inline;
+	color: #000;
+	margin: 0;
+	text-shadow: 1px 1px 2px #F58400;
+}
+
+fieldset {
+	display: inline;
+	border: none;
+	margin: 1em 0 0 0;
+	padding: 0;
+}
+
+#services {
+	display: block;
+}
+
+#services ul {
+	margin: 0;
+	padding: 0;
+}
+
+#services li {
+	margin: 0;
+	padding: 0 1em 0 0;
+	list-style: none;
+	float: left;
+}
+
+#search_terms {
+	position: absolute;
+	width: 10em;
+	margin: 1em 0 0 0;
+	padding: 0.5em;
+}
+
+#search_terms li {
+	list-style: none;
+	margin: 0.5em 0;
+	padding: 0.25em;
+}
+
+.ui-tabs {
+	margin: 1em 0 0 12em;
+}
+
+.result {
+	position: relative;
+	padding: 1em;
+	margin-bottom: 1em;
+}
+
+.result-term {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	padding: 5px;
+}
